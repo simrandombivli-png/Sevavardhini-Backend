@@ -1,25 +1,24 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-
 const db = require('./config/db');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
-// Middleware
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Root Route
-app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to Sevavardhini NGO API Server (PostgreSQL / Supabase)' });
-});
+// Mount Authentication Routes
+app.use('/api/auth', authRoutes);
 
-// Test Database Query Route
+// Test Route to check database connection
 app.get('/api/test-db', async (req, res) => {
   try {
-    const result = await db.query('SELECT user_id, user_name, email, role, user_created_at FROM users');
-    
+    const result = await db.query(
+      'SELECT user_id, user_name, email, role, user_created_at FROM users'
+    );
     res.status(200).json({
       success: true,
       message: 'Database connected successfully!',
@@ -37,5 +36,5 @@ app.get('/api/test-db', async (req, res) => {
 // Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
