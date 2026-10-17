@@ -66,5 +66,38 @@ const getMe = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
+// CHANGE PASSWORD
+const changePassword = async (req, res) => {
+  try {
+    const currentPassword = String(req.body?.current_password ?? '');
+    const newPassword = String(req.body?.new_password ?? '');
 
-module.exports = { login, getMe };
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Please provide current_password and new_password' });
+    }
+    if (newPassword.length < 8 || Buffer.byteLength(newPassword, 'utf8') > 72) {
+      return res.status(400).json({ success: false, message: 'New password must be 8 to 72 characters long' });
+    }
+    if (newPassword === currentPassword) {
+      return res.status(400).json({ success: false, message: 'New password must be different from the current password' });
+    }
+
+    const { rows } = await db.query('SELECT password FROM users WHERE user_id = $1', [req.user.user_id]);
+    const ok = await bcrypt.compare(currentPassword, rows[0]?.password || DUMMY_HASH);
+    if (!rows[0] || !ok) {
+      return res.status(400).json({ success: false, message: 'Current password is incorrect' });
+    }
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+    await db.query(
+      'UPDATE users SET password = $1, user_updated_at = NOW() WHERE user_id = $2',
+      [hashed, req.user.user_id]
+    );
+
+    res.status(200).json({ success: true, message: 'Password changed successfully' });
+  } catch (error) {
+    console.error('Change Password Error:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+module.exports = { login, getMe, changePassword  };
