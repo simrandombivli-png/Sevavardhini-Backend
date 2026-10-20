@@ -8,7 +8,7 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
-const dashboardRoutes = require('./routes/dashboardRoutes');   // with the other requires
+const dashboardRoutes = require('./routes/dashboardRoutes');   
 const projectRoutes = require('./routes/projectRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 const app = express();
@@ -21,7 +21,7 @@ app.use(express.json({ limit: '10kb' }));
 // Mount Authentication Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes); 
-app.use('/api/projects', projectRoutes);                   // under the auth routes
+app.use('/api/projects', projectRoutes);                  
 app.get('/health', async (req, res) => {
   try { await db.query('SELECT 1'); res.json({ status: 'ok' }); }
   catch { res.status(503).json({ status: 'unavailable' }); }

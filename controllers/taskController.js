@@ -67,7 +67,7 @@ const TASK_SELECT = `
     JOIN projects p ON p.pro_id = t.project_id
     LEFT JOIN users u ON u.user_id = t.task_assigned_to`;
 
-// What each role is allowed to SEE. Returns a WHERE fragment and its parameters.
+
 // Admin: everything. Project Manager: tasks of their own, non-archived projects.
 // Coordinator: only tasks assigned to them, in non-archived projects.
 const visibility = (user, startAt) => {

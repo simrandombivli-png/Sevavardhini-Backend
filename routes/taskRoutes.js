@@ -12,7 +12,7 @@ router.get('/', c.listTasks);                 // each role sees only its own sco
 router.get('/:id', c.getTask);
 router.post('/', authorizeRoles('Admin', 'Project_Manager'), c.createTask);
 router.patch('/:id', authorizeRoles('Admin', 'Project_Manager'), c.updateTask);
-router.patch('/:id/status', c.updateStatus);  // coordinators too; the controller checks the task is theirs
+router.patch('/:id/status', c.updateStatus);  // for coordinators, the controller checks the task is theirs
 router.delete('/:id', authorizeRoles('Admin', 'Project_Manager'), c.deleteTask);
 
 module.exports = router;
