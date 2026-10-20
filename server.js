@@ -9,7 +9,8 @@ const cors = require('cors');
 const db = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');   // with the other requires
-  
+const taskRoutes = require('./routes/taskRoutes');
+
 const app = express();
 
 // Middlewares
@@ -24,7 +25,7 @@ app.get('/health', async (req, res) => {
   try { await db.query('SELECT 1'); res.json({ status: 'ok' }); }
   catch { res.status(503).json({ status: 'unavailable' }); }
 });
-
+app.use('/api/tasks', taskRoutes);
 
 // Start Server
 const PORT = process.env.PORT || 5000;
