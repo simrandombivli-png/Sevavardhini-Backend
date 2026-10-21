@@ -1,4 +1,5 @@
-
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
 
 CREATE TABLE public.users (
   user_id integer NOT NULL DEFAULT nextval('users_user_id_seq'::regclass),
