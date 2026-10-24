@@ -12,10 +12,12 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 const app = express();
+const allowedOrigins = process.env.FRONTEND_URL.split(',').map((s) => s.trim());
+
 app.set('trust proxy', 1);
 // Middlewares
 app.use(helmet());
-app.use(cors({ origin: process.env.FRONTEND_URL.split(',') }));
+app.use(cors({ origin: allowedOrigins.includes('*') ? true : allowedOrigins }));
 app.use(express.json({ limit: '10kb' }));
 
 // Mount Authentication Routes
